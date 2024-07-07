@@ -53,7 +53,7 @@ func InsertionSort(arr []uint64) []uint64 {
 }
 
 func generateRandomArray() []uint64 {
-	arr := make([]uint64, 10000)
+	arr := make([]uint64, 100000)
 
 	for i := range arr {
 		arr[i] = uint64(rand.Uint64())
