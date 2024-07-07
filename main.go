@@ -1,8 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+	"net/http"
+)
 
-func BubbleSort(arr []int) []int {
+func BubbleSort(arr []uint64) []uint64 {
 	var n = len(arr)
 	for i := 0; i < n; i++ {
 		for j := 0; j < n-1; j++ {
@@ -16,7 +20,7 @@ func BubbleSort(arr []int) []int {
 	return arr
 }
 
-func SelectionSort(arr []int) []int {
+func SelectionSort(arr []uint64) []uint64 {
 	var n = len(arr)
 	for i := 0; i < n; i++ {
 		var min = i
@@ -34,7 +38,7 @@ func SelectionSort(arr []int) []int {
 	return arr
 }
 
-func InsertionSort(arr []int) []int {
+func InsertionSort(arr []uint64) []uint64 {
 	var n = len(arr)
 	for i := 1; i < n; i++ {
 		var key = arr[i]
@@ -48,9 +52,30 @@ func InsertionSort(arr []int) []int {
 	return arr
 }
 
-func main() {
-	var arr = []int{3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 48}
-	SelectionSort(arr)
+func generateRandomArray() []uint64 {
+	arr := make([]uint64, 10000)
 
-	fmt.Println(arr)
+	for i := range arr {
+		arr[i] = uint64(rand.Uint64())
+	}
+
+	fmt.Println("First 10 elements of the array:", arr[:10])
+	return arr
+}
+
+func main() {
+
+	server := http.NewServeMux()
+
+	server.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		arr := generateRandomArray()
+		BubbleSort(arr)
+
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Bubble sort done"))
+	})
+
+	http.ListenAndServe(":5010", server)
+
 }
