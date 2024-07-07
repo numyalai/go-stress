@@ -68,8 +68,11 @@ func main() {
 	server := http.NewServeMux()
 
 	server.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		arr := generateRandomArray()
-		BubbleSort(arr)
+
+		go func() {
+			arr := generateRandomArray()
+			BubbleSort(arr)
+		}()
 
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusOK)
